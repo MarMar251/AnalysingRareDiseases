@@ -8,7 +8,7 @@ from domain.entities.disease import Disease
 @dataclass(slots=True)
 class ListDiseasesQuery:
     skip: int = 0
-    limit: int = 10
+    limit: int = 100
 
 
 def list_diseases(q: ListDiseasesQuery, *, uow: IUnitOfWork) -> Sequence[Disease]:
