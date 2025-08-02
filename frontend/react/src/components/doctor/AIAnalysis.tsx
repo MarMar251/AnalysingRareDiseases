@@ -106,31 +106,9 @@ export const AIAnalysis: React.FC = () => {
       });
     } catch (error: any) {
       console.error('Analysis error:', error);
-      let errorMsg = "There was an error processing the image";
-
-      if (error.response) {
-        // Handle specific error status codes
-        switch (error.response.status) {
-          case 400:
-            errorMsg = "Invalid file type. Please upload a valid medical image.";
-            break;
-          case 401:
-            errorMsg = "Authentication required. Please log in again.";
-            break;
-          case 403:
-            errorMsg = "You don't have permission to use this feature.";
-            break;
-          case 500:
-            errorMsg = "Server error during classification. Please try again later.";
-            break;
-          default:
-            errorMsg = error.response.data?.message || errorMsg;
-        }
-      }
-
       toast({
         title: "Analysis failed",
-        description: errorMsg,
+        description: error.userMessage || "There was an error processing the image",
         variant: "destructive",
       });
     } finally {

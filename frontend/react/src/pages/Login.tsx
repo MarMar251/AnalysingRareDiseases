@@ -18,12 +18,12 @@ import { toast } from "../hooks/use-toast";
 
 /* ───────────────────────── Login Page ───────────────────────── */
 export const Login: React.FC = () => {
-  const [email, setEmail]       = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const navigate             = useNavigate();
+  const navigate = useNavigate();
   const { user, isLoading, login } = useAuth();
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const Login: React.FC = () => {
       toast({
         title: "Login failed",
         description:
-          (err as Error)?.message ?? "Invalid credentials or network error",
+          (err as any)?.userMessage || (err as Error)?.message || "Invalid credentials or network error",
         variant: "destructive",
       });
     } finally {
@@ -120,19 +120,6 @@ export const Login: React.FC = () => {
               )}
             </Button>
           </form>
-
-          {/* Demo accounts */}
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-800 font-medium mb-2">
-              Demo Accounts:
-            </p>
-            <div className="space-y-1 text-xs text-blue-700">
-              <p>Doctor: doctor147@example.com</p>
-              <p>Admin: doctor@example.com</p>
-              <p>Nurse: admin@hospital.com</p>
-              <p className="font-medium">Password: string</p>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>

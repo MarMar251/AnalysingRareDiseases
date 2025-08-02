@@ -18,7 +18,8 @@ export const AssignDisease: React.FC = () => {
   const { toast } = useToast();
 
   const { data: patient, isLoading: loadingPatient } = usePatient(patientId);
-  const { data: diseases, isLoading: loadingDiseases } = useDiseases();
+  // Fetch all diseases by setting a very large limit
+  const { data: diseases, isLoading: loadingDiseases } = useDiseases(0, 10000);
   const assignDisease = useAssignDisease();
 
   const [selectedDiseaseId, setSelectedDiseaseId] = useState<string>('');
@@ -69,73 +70,72 @@ export const AssignDisease: React.FC = () => {
   }
 
   return (
-      <div className="space-y-6">
-        
-        <Card className="max-w-3xl mx-auto">
-          <CardHeader>
-            <CardTitle>Assign Disease to Patient</CardTitle>
-            <div className="text-muted-foreground">
-              Patient: <span className="font-medium">{patient.full_name}</span>
-            </div>
-          </CardHeader>
+    <div className="space-y-6">
 
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Search Diseases</label>
-                <div className="relative mt-1">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    placeholder="Search for diseases..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
+      <Card className="max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle>Assign Disease to Patient</CardTitle>
+          <div className="text-muted-foreground">
+            Patient: <span className="font-medium">{patient.full_name}</span>
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Search Diseases</label>
+              <div className="relative mt-1">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search for diseases..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
               </div>
+            </div>
 
-              <div className="space-y-3">
-                <label className="text-sm font-medium">Available Diseases</label>
-                <div className="max-h-60 overflow-y-auto border rounded-lg p-4 space-y-2">
-                  {filteredDiseases.map((disease) => (
-                    <div
-                      key={disease.id}
-                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedDiseaseId === disease.id.toString()
-                          ? 'border-primary bg-primary/5'
-                          : 'border-gray-200 hover:border-gray-300'
+            <div className="space-y-3">
+              <label className="text-sm font-medium">Available Diseases</label>
+              <div className="max-h-60 overflow-y-auto border rounded-lg p-4 space-y-2">
+                {filteredDiseases.map((disease) => (
+                  <div
+                    key={disease.id}
+                    className={`p-3 border rounded-lg cursor-pointer transition-colors ${selectedDiseaseId === disease.id.toString()
+                      ? 'border-primary bg-primary/5'
+                      : 'border-gray-200 hover:border-gray-300'
                       }`}
-                      onClick={() => setSelectedDiseaseId(disease.id.toString())}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="font-medium">{disease.name}</h4>
-                          
-                        </div>
-                        <input
-                          type="radio"
-                          name="disease"
-                          value={disease.id}
-                          checked={selectedDiseaseId === disease.id.toString()}
-                          onChange={() => setSelectedDiseaseId(disease.id.toString())}
-                          className="mt-1"
-                        />
+                    onClick={() => setSelectedDiseaseId(disease.id.toString())}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-medium">{disease.name}</h4>
+
                       </div>
+                      <input
+                        type="radio"
+                        name="disease"
+                        value={disease.id}
+                        checked={selectedDiseaseId === disease.id.toString()}
+                        onChange={() => setSelectedDiseaseId(disease.id.toString())}
+                        className="mt-1"
+                      />
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
 
-            <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => navigate(`/doctor/patients/view/${id}`)}>Cancel</Button>
-              <Button onClick={handleAssignDisease} disabled={!selectedDiseaseId}>
-                <Plus className="h-4 w-4 mr-2" /> Assign Disease
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          <div className="flex justify-between pt-4">
+            <Button variant="outline" onClick={() => navigate(`/doctor/patients/view/${id}`)}>Cancel</Button>
+            <Button onClick={handleAssignDisease} disabled={!selectedDiseaseId}>
+              <Plus className="h-4 w-4 mr-2" /> Assign Disease
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
 
   );
 };

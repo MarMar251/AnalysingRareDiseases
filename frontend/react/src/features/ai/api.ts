@@ -16,7 +16,7 @@ export const aiApi = {
           'Content-Type': 'multipart/form-data',
           ...authHeader()
         },
-        timeout: 70000,
+        timeout: 7000000,
         onUploadProgress
       }
     ).then(r => r.data),

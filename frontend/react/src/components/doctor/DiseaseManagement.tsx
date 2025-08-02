@@ -21,8 +21,11 @@ export const DiseaseManagement: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: diseases = [], isLoading, isError } = useDiseases();
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
+  const limit = 10;
+  const skip = page * limit;
+  const { data: diseases = [], isLoading, isError } = useDiseases(skip, limit);
 
   const filteredDiseases = diseases.filter((d: Disease) =>
     d.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -52,10 +55,7 @@ export const DiseaseManagement: React.FC = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Disease Database</CardTitle>
-              <CardDescription>
-                {filteredDiseases.length} diseases in your database
-              </CardDescription>
+              <CardTitle>Diseases </CardTitle>
             </div>
             <div className="relative w-64">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -77,8 +77,8 @@ export const DiseaseManagement: React.FC = () => {
                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                       <Stethoscope className="h-5 w-5 text-green-600" />
                     </div>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => navigate(`/${user?.role}/diseases/edit/${disease.id}`)}
                     >
@@ -96,16 +96,16 @@ export const DiseaseManagement: React.FC = () => {
                       ID: {disease.id}
                     </Badge>
                     <div className="flex items-center space-x-1">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => navigate(`/${user?.role}/diseases/view/${disease.id}`)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      
-                      <Button 
-                        variant="ghost" 
+
+                      <Button
+                        variant="ghost"
                         size="sm"
                         onClick={() => navigate(`/${user?.role}/diseases/edit/${disease.id}`)}
                       >
@@ -116,6 +116,24 @@ export const DiseaseManagement: React.FC = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+          <div className="flex justify-end mt-4 space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => p + 1)}
+              disabled={diseases.length < limit}
+            >
+              Next
+            </Button>
           </div>
         </CardContent>
       </Card>
